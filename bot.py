@@ -30,7 +30,7 @@ from telegram.constants import ParseMode
 # here we go
 
 # Bot token
-TOKEN = "7971974464:AAF1HxI7HK7rGqkHMKBty9HEMllnxdYT6Uw"
+TOKEN = "8050281592:AAHN9RO11Jp2JpwPaWXaN_J1Ntlymwb8q2U"
 
 # List of accounts for load balancing
 ACCOUNTS = [
