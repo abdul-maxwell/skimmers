@@ -92,15 +92,41 @@ ACCOUNT_INDEX = 0
 ACCOUNT_LOCK = asyncio.Lock()
 
 # Load BIN data from CSV
+# Load BIN data from CSV
 BIN_DATA = {}
 try:
-    with open('bins_all.csv', 'r') as f:
+    print("📂 Loading main BIN database...")
+    with open('bins_all.csv', 'r', encoding='utf-8') as f:
+        # Count total lines first
+        lines = f.readlines()
+        total_lines = len(lines) - 1  # Subtract header
+        f.seek(0)  # Reset file pointer
+        
         reader = csv.DictReader(f)
+        count = 0
+        last_percentage = 0
+        
         for row in reader:
-            BIN_DATA[row['number']] = row
-    print(f"Loaded {len(BIN_DATA)} BIN records from bins_all.csv")
+            if 'number' in row and row['number']:
+                BIN_DATA[row['number']] = row
+            count += 1
+            
+            # Show progress every 10%
+            current_percentage = int((count / total_lines) * 100)
+            if current_percentage > last_percentage and current_percentage % 10 == 0:
+                print(f"   🔄 {current_percentage}% - {count}/{total_lines} records")
+                last_percentage = current_percentage
+            
+            # Show progress for every 50k records
+            if count % 50000 == 0:
+                print(f"   📊 Loaded {count} BIN records...")
+    
+    print(f"✅ Loaded {len(BIN_DATA)} BIN records from bins_all.csv")
+    
 except FileNotFoundError:
-    print("Warning: bins_all.csv not found. BIN lookup will not work.")
+    print("⚠ Warning: bins_all.csv not found. BIN lookup will not work.")
+except Exception as e:
+    print(f"❌ Error loading main BIN data: {e}")
 
 # Video
 MENU_VIDEOS = ['menu1.mp4', 'menu2.mp4', 'menu3.mp4', 'menu4.mp4', 'menu5.mp4']
